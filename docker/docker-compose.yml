@@ -23,28 +23,28 @@ services:
   apache:
     build: ${PWD}/docker/apache
     user: "${UID}:${GID}"
-    container_name: symfonydesk-apache
+    container_name: ${PROJECT_NAME}-apache
     restart: unless-stopped
     volumes:
-      - ${PWD}/docker/apache/symfonydesk.conf:/etc/apache2/sites-enabled/000-default.conf:ro
-      - ${PWD}/site:/var/www/symfonydesk
+      - ${PWD}/docker/apache/${PROJECT_NAME}.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ${PWD}/site:/var/www/${PROJECT_NAME}
       - ${PWD}/docker/apache/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
 
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.symfonydesk.rule=Host(`symfonydesk.docker.localhost`)"
-      - "traefik.http.routers.symfonydesk.entrypoints=websecure"
-      - "traefik.http.routers.symfonydesk.tls=true"
+      - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`${PROJECT_NAME}.docker.localhost`)"
+      - "traefik.http.routers.${PROJECT_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${PROJECT_NAME}.tls=true"
     networks:
       - symfony
 
   db:
     image: mysql:8.1
-    container_name: symfonydesk-db
+    container_name: ${PROJECT_NAME}-db
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: symfonydesk
+      MYSQL_DATABASE: ${PROJECT_NAME}
       MYSQL_USER: symfony
       MYSQL_PASSWORD: symfony123
     volumes:
@@ -54,24 +54,11 @@ services:
 
   mailer:
     image: mailhog/mailhog:latest
-    container_name: symfonydesk-mailer
+    container_name: ${PROJECT_NAME}-mailer
     restart: unless-stopped
     ports:
       - "1025:1025"   # SMTP
       - "8025:8025"   # Web UI
-
-  whoami:
-    image: "traefik/whoami"
-    container_name: whoami
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`aaaa.docker.localhost`)"
-      - "traefik.http.routers.whoami.entrypoints=websecure"
-      - "traefik.http.routers.whoami.tls=true"
-    networks:
-      - symfony
-
 
 volumes:
   db_data:
