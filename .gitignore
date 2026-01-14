@@ -1,0 +1,6 @@
+site/vendor/
+site/var/
+site/.env
+site/docker/
+docker/traefik/certs/
+site/*.log

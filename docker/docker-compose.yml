@@ -1,0 +1,84 @@
+services:
+
+  traefik:
+    image: "traefik:v3.6"
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${PWD}/docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ${PWD}/docker/traefik/certs:/certs:ro
+    networks:
+      - symfony
+
+  apache:
+    build: ${PWD}/docker/apache
+    user: "${UID}:${GID}"
+    container_name: symfonydesk-apache
+    restart: unless-stopped
+    volumes:
+      - ${PWD}/docker/apache/symfonydesk.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ${PWD}/site:/var/www/symfonydesk
+      - ${PWD}/docker/apache/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.symfonydesk.rule=Host(`symfonydesk.docker.localhost`)"
+      - "traefik.http.routers.symfonydesk.entrypoints=websecure"
+      - "traefik.http.routers.symfonydesk.tls=true"
+    networks:
+      - symfony
+
+  db:
+    image: mysql:8.1
+    container_name: symfonydesk-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: symfonydesk
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - symfony
+
+  mailer:
+    image: mailhog/mailhog:latest
+    container_name: symfonydesk-mailer
+    restart: unless-stopped
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: whoami
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`aaaa.docker.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls=true"
+    networks:
+      - symfony
+
+
+volumes:
+  db_data:
+  traefik_certs:
+
+networks:
+  symfony:
+    driver: bridge
+
+
