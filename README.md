@@ -14,6 +14,7 @@ sudo setfacl -R -m u:$(whoami):rwx,u:www-data:rwx site && sudo setfacl -d -R -m 
 
 3. l'env
 mv site/.env{.dev,}
+mv .env{.dev,}
 
 4. Lancer Docker :
 docker compose up -d

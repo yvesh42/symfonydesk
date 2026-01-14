@@ -26,8 +26,8 @@ services:
     container_name: ${PROJECT_NAME}-apache
     restart: unless-stopped
     volumes:
-      - ${PWD}/docker/apache/${PROJECT_NAME}.conf:/etc/apache2/sites-enabled/000-default.conf:ro
-      - ${PWD}/site:/var/www/${PROJECT_NAME}
+      - ${PWD}/docker/apache/symfonydesk.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - ${PWD}/site:/var/www/symfonydesk
       - ${PWD}/docker/apache/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
 
     labels:
@@ -44,7 +44,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: ${PROJECT_NAME}
+      MYSQL_DATABASE: symfonydesk
       MYSQL_USER: symfony
       MYSQL_PASSWORD: symfony123
     volumes:
