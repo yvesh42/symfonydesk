@@ -41,6 +41,7 @@ services:
       - "traefik.http.routers.${PROJECT_NAME}-https.tls=true"
     networks:
       - symfony
+    working_dir: /var/www/symfonydesk
 
   db:
     image: mysql:8.1

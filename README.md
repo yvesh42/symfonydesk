@@ -21,7 +21,14 @@ docker run --rm -v $(pwd)/site:/app -w /app composer install
 5. Lancer Docker :
 docker compose up -d
 
-6. Accéder au projet :
+
+6. les assets
+docker compose exec apache php bin/console importmap:install
+# pour la prod docker compose exec apache php bin/console asset-map:compile
+# pour le dev docker compose exec apache php bin/console sass:build --watch
+
+
+7. Accéder au projet :
 https://symfonydesk.docker.localhost
 
 ⚠️ Certificat auto-signé, ignorez l’avertissement du navigateur.

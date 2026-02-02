@@ -261,7 +261,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         formats?: array<string, string|list<scalar|null|Param>>,
  *     },
  *     assets?: bool|array{ // Assets configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         strict_mode?: bool|Param, // Throw an exception if an entry is missing from the manifest.json. // Default: false
  *         version_strategy?: scalar|null|Param, // Default: null
  *         version?: scalar|null|Param, // Default: null
@@ -280,7 +280,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     asset_mapper?: bool|array{ // Asset Mapper configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         paths?: array<string, scalar|null|Param>,
  *         excluded_patterns?: list<scalar|null|Param>,
  *         exclude_dotfiles?: bool|Param, // If true, any files starting with "." will be excluded from the asset mapper. // Default: true
@@ -465,7 +465,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     disallow_search_engine_index?: bool|Param, // Enabled by default when debug is enabled. // Default: true
  *     http_client?: bool|array{ // HTTP Client configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         max_host_connections?: int|Param, // The maximum number of connections to a single host.
  *         default_options?: array{
  *             headers?: array<string, mixed>,
@@ -683,28 +683,137 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  * }
+ * @psalm-type TwigConfig = array{
+ *     form_themes?: list<scalar|null|Param>,
+ *     globals?: array<string, array{ // Default: []
+ *         id?: scalar|null|Param,
+ *         type?: scalar|null|Param,
+ *         value?: mixed,
+ *     }>,
+ *     autoescape_service?: scalar|null|Param, // Default: null
+ *     autoescape_service_method?: scalar|null|Param, // Default: null
+ *     cache?: scalar|null|Param, // Default: true
+ *     charset?: scalar|null|Param, // Default: "%kernel.charset%"
+ *     debug?: bool|Param, // Default: "%kernel.debug%"
+ *     strict_variables?: bool|Param, // Default: "%kernel.debug%"
+ *     auto_reload?: scalar|null|Param,
+ *     optimizations?: int|Param,
+ *     default_path?: scalar|null|Param, // The default path used to load templates. // Default: "%kernel.project_dir%/templates"
+ *     file_name_pattern?: list<scalar|null|Param>,
+ *     paths?: array<string, mixed>,
+ *     date?: array{ // The default format options used by the date filter.
+ *         format?: scalar|null|Param, // Default: "F j, Y H:i"
+ *         interval_format?: scalar|null|Param, // Default: "%d days"
+ *         timezone?: scalar|null|Param, // The timezone used when formatting dates, when set to null, the timezone returned by date_default_timezone_get() is used. // Default: null
+ *     },
+ *     number_format?: array{ // The default format options for the number_format filter.
+ *         decimals?: int|Param, // Default: 0
+ *         decimal_point?: scalar|null|Param, // Default: "."
+ *         thousands_separator?: scalar|null|Param, // Default: ","
+ *     },
+ *     mailer?: array{
+ *         html_to_text_converter?: scalar|null|Param, // A service implementing the "Symfony\Component\Mime\HtmlToTextConverter\HtmlToTextConverterInterface". // Default: null
+ *     },
+ * }
+ * @psalm-type TwigExtraConfig = array{
+ *     cache?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     html?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     markdown?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     intl?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     cssinliner?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     inky?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     string?: bool|array{
+ *         enabled?: bool|Param, // Default: false
+ *     },
+ *     commonmark?: array{
+ *         renderer?: array{ // Array of options for rendering HTML.
+ *             block_separator?: scalar|null|Param,
+ *             inner_separator?: scalar|null|Param,
+ *             soft_break?: scalar|null|Param,
+ *         },
+ *         html_input?: "strip"|"allow"|"escape"|Param, // How to handle HTML input.
+ *         allow_unsafe_links?: bool|Param, // Remove risky link and image URLs by setting this to false. // Default: true
+ *         max_nesting_level?: int|Param, // The maximum nesting level for blocks. // Default: 9223372036854775807
+ *         max_delimiters_per_line?: int|Param, // The maximum number of strong/emphasis delimiters per line. // Default: 9223372036854775807
+ *         slug_normalizer?: array{ // Array of options for configuring how URL-safe slugs are created.
+ *             instance?: mixed,
+ *             max_length?: int|Param, // Default: 255
+ *             unique?: mixed,
+ *         },
+ *         commonmark?: array{ // Array of options for configuring the CommonMark core extension.
+ *             enable_em?: bool|Param, // Default: true
+ *             enable_strong?: bool|Param, // Default: true
+ *             use_asterisk?: bool|Param, // Default: true
+ *             use_underscore?: bool|Param, // Default: true
+ *             unordered_list_markers?: list<scalar|null|Param>,
+ *         },
+ *         ...<mixed>
+ *     },
+ * }
+ * @psalm-type SymfonycastsSassConfig = array{
+ *     root_sass?: list<scalar|null|Param>,
+ *     binary?: scalar|null|Param, // The Sass binary to use // Default: null
+ *     sass_options?: array{
+ *         style?: "compressed"|"expanded"|Param, // The style of the generated CSS: compressed or expanded. // Default: "expanded"
+ *         charset?: bool|Param, // Whether to include the charset declaration in the generated Sass.
+ *         error_css?: bool|Param, // Emit a CSS file when an error occurs.
+ *         source_map?: bool|Param, // Whether to generate source maps. // Default: true
+ *         embed_sources?: bool|Param, // Embed source file contents in source maps.
+ *         embed_source_map?: bool|Param, // Embed source map contents in CSS. // Default: "%kernel.debug%"
+ *         load_path?: list<scalar|null|Param>,
+ *         quiet?: bool|Param, // Don't print warnings.
+ *         quiet_deps?: bool|Param, // Don't print compiler warnings from dependencies.
+ *         stop_on_error?: bool|Param, // Don't compile more files once an error is encountered.
+ *         trace?: bool|Param, // Print full Dart stack traces for exceptions.
+ *     },
+ *     embed_sourcemap?: bool|null|Param, // Deprecated: Option "embed_sourcemap" at "symfonycasts_sass.embed_sourcemap" is deprecated. Use "sass_options.embed_source_map" instead". // Default: null
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
  *     services?: ServicesConfig,
  *     framework?: FrameworkConfig,
+ *     twig?: TwigConfig,
+ *     twig_extra?: TwigExtraConfig,
+ *     symfonycasts_sass?: SymfonycastsSassConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
+ *         twig?: TwigConfig,
+ *         twig_extra?: TwigExtraConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
+ *         twig?: TwigConfig,
+ *         twig_extra?: TwigExtraConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
+ *         twig?: TwigConfig,
+ *         twig_extra?: TwigExtraConfig,
+ *         symfonycasts_sass?: SymfonycastsSassConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

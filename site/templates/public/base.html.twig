@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ma Boutique{% endblock %}</title>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
+{% endblock %}
+</head>
+<body>
+    {# Navbar #}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ path('homepage') }}">
+                <i class="bi bi-shop"></i> MonShop
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('homepage') }}">Produits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('homepage') }}">Promotions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('homepage') }}">Contact</a>
+                    </li>
+                </ul>
+                <div class="d-flex gap-3">
+                    <a href="{{ path('homepage') }}" class="btn btn-outline-light position-relative">
+                        <i class="bi bi-cart3"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ cart_count ?? 0 }}
+                        </span>
+                    </a>
+                    <a href="{{ path('homepage') }}" class="btn btn-outline-light">
+                        <i class="bi bi-person"></i> Mon compte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {# Contenu principal #}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {# Footer #}
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>À propos</h5>
+                    <p>MonShop, votre boutique en ligne de confiance depuis 2020.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Liens utiles</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white-50">CGV</a></li>
+                        <li><a href="#" class="text-white-50">Mentions légales</a></li>
+                        <li><a href="#" class="text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Suivez-nous</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-facebook fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="text-white-50">
+            <p class="text-center mb-0">&copy; {{ "now"|date("Y") }} MonShop - Tous droits réservés</p>
+        </div>
+    </footer>
+
+{% block javascripts %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+{% endblock %}
+</body>
+</html>
