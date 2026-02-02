@@ -29,12 +29,16 @@ services:
       - ${PWD}/docker/apache/symfonydesk.conf:/etc/apache2/sites-enabled/000-default.conf:ro
       - ${PWD}/site:/var/www/symfonydesk
       - ${PWD}/docker/apache/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
-
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${PROJECT_NAME}.rule=Host(`${PROJECT_NAME}.docker.localhost`)"
-      - "traefik.http.routers.${PROJECT_NAME}.entrypoints=websecure"
-      - "traefik.http.routers.${PROJECT_NAME}.tls=true"
+      - "traefik.http.routers.${PROJECT_NAME}-http.rule=Host(`${PROJECT_NAME}.docker.localhost`)"
+      - "traefik.http.routers.${PROJECT_NAME}-http.entrypoints=web"
+      - "traefik.http.routers.${PROJECT_NAME}-http.middlewares=${PROJECT_NAME}-redirect"
+      - "traefik.http.middlewares.${PROJECT_NAME}-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.${PROJECT_NAME}-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.${PROJECT_NAME}-https.rule=Host(`${PROJECT_NAME}.docker.localhost`)"
+      - "traefik.http.routers.${PROJECT_NAME}-https.entrypoints=websecure"
+      - "traefik.http.routers.${PROJECT_NAME}-https.tls=true"
     networks:
       - symfony
 
