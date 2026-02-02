@@ -4,3 +4,4 @@ site/.env
 site/docker/
 docker/traefik/certs/
 site/*.log
+.env
